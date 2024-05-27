@@ -28,3 +28,16 @@ jobs:
 
       - name: Push image docker
         run: docker push augustod3v/deploy_aws_java
+
+  build-on-aws:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Pull Image from Docker
+        run: sudo docker pull augustod3v/deploy_aws_java
+
+      - name: Remove docker container
+        run: sudo docker rm -f deploy_aws_java
+
+      - name: Run Docker container
+        run: sudo docker run -d -p 3000:3000 --name api-ec2 augustod3v/deploy_aws_java
